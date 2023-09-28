@@ -1,0 +1,47 @@
+.settings-zone {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+
+    width: 60rem;
+    height: 40rem;
+
+    padding: 3rem;
+
+    display: none;
+    flex-direction: column;
+    gap: 3rem;
+
+    border: solid .2rem black;
+    border-radius: .5rem;
+    background-color: var(--blue);
+}
+
+.settings-keys {
+    width: 7rem;
+    height: 7rem;
+    
+    border: 1px solid;
+    color: white;
+    font-family: 'Keysfont';
+    font-size: 3rem;
+    text-align: center;
+    line-height: 7rem;
+}
+
+.settings-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.settings-sub-zone {
+    display: flex;
+    gap: 1rem;
+}
+
+.show-flex {
+    display: flex;
+}

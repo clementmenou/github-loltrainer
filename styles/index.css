@@ -1,0 +1,44 @@
+body{
+    width: 100vw;
+    height: 100vh;
+
+    padding: 1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--blue);
+}
+
+.board{
+    width: 100%;
+    height: 100%;
+
+    position: relative;
+
+    border: solid 3px black;
+    border-radius: .5rem;
+
+    background-color: rgba(224, 224, 224, 0.461);
+}
+
+.target {
+    width: 4rem;
+    height: 4rem;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    border: .3rem solid black;
+    border-radius: 50%;
+
+    text-align: center;
+    line-height: 3.4rem;
+    font-size: 3rem;
+    font-family: 'Keysfont';
+    font-weight: 500;
+    cursor: default;
+    user-select: none;
+}
