@@ -1,12 +1,12 @@
 [
     {
         "key" : "A",
-        "input" : "KeyA",
+        "input" : "KeyQ",
         "probability" : 30
     },
     {
         "key" : "Z",
-        "input" : "KeyZ",
+        "input" : "KeyW",
         "probability" : 20
     },
     {
