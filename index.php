@@ -3,15 +3,15 @@
     $title = 'Lol trainer';
     
     $styles = ['setup', 'menu', 'settings', 'index'];
-    $scripts = ['board'];
+    $scripts = ['board', 'menu', 'settings'];
     
     include 'includes/head.php'; 
 ?>
 <body>
     <?php 
-        include 'includes/menu.php'; // Menu burger déroulant 
-        include 'includes/settings.php'; // Settings
-        include 'includes/credits.php'; // Credits
+        include 'includes/menu.html'; // Menu burger déroulant 
+        include 'includes/settings.html'; // Settings
+        include 'includes/credits.html'; // Credits
     ?>
 
     <div class="board"></div>

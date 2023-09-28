@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+</head>
+<body>
+	<script>
+		function asyncIO(uri) {
+			return new Promise(
+				(resolve, reject) => {
+					const xhr = new XMLHttpRequest();
+					xhr.onload = function () {
+						if (xhr.status === 200) {
+							/* Appel du callback resolve */
+							/* En argument le résultat de l'opération asynchrone */
+							resolve(xhr.responseText);
+						} else {
+							/* Appel du callback reject */
+							/* En argument la raison de l'échec */
+							reject(xhr.status+' '+xhr.statusText);
+						}
+					}
+					xhr.open('GET', uri);
+					xhr.send(null);						
+				}
+			)
+		}
+		const uri_1 = 'cascade.php?action=get_client_id';
+		const uri_2 = 'cascade.php?action=get_command_list&clientId=';
+		// Maintenant on a bien les callbacks qui sont les uns en dessous des autres
+		// On a une présentation séquentielle de nos opérations.
+		// Si on fait un 404 sur la première uri on va au catch
+		// Si on fait un 404 sur la deuxième uri on va au catch
+		// Le catch est commun.
+		asyncIO(uri_1)
+		.then( /* Déclaration du callback resolve pour uri_1 */
+			reponse => { 
+				console.log('THEN_1 => '+reponse);
+				// Lancement d'une deuxième requête
+				return asyncIO(uri_2+reponse)
+			}
+		).then( /* Déclaration du callback resolve pour uri_2 */
+			reponse => { 
+				console.log('THEN_2 => '+reponse);
+			}
+		).catch( /* Déclaration du callback reject */
+			raison => { console.error('CATCH => '+raison) }
+		)
+	</script>
+</body>
+</html>
