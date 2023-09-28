@@ -31,9 +31,13 @@ function initBoard(e){
     // Récupération des keys du player
     async function getPlayerKeys() {
         const rep = await fetch('players_datas/keys.json');
-        const json = await rep.json()
-        console.log(json);
-        return json;
+        const json = await rep.json();
+        let keys = [];
+        json.forEach(elem => {
+            for(let i = 0; i < elem.probability; i++)
+                keys.push(elem);
+        });
+        return keys;
     };
 
     // Attribution du contenu de la cible
