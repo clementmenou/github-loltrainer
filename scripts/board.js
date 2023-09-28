@@ -1,6 +1,6 @@
-window.addEventListener("load", init);
+window.addEventListener("load", initBoard);
 
-function init(e){
+function initBoard(e){
     // Elements HTML
     var board = document.querySelector('.board');
     var target = document.createElement('div');
@@ -28,11 +28,20 @@ function init(e){
         target.style.left = "calc(" + leftInt + "% + 5%";
     }
     
+    // Récupération des keys du player
+    async function getPlayerKeys() {
+        const rep = await fetch('players_datas/keys.json');
+        const json = await rep.json()
+        console.log(json);
+        return json;
+    };
+
     // Attribution du contenu de la cible
-    function getRandomContent(e){
-        // let index = getRandomInt(keys.length);
-        // target.textContent = keys[index][0];
-        // target.targetKeyCode = keys[index][1];
+    async function getRandomContent(e){
+        let playerKeys = await getPlayerKeys();
+        let index = getRandomInt(playerKeys.length);
+        target.textContent = playerKeys[index].key;
+        target.targetKeyCode = playerKeys[index].input;
     } 
 
     // Entier random entre 0 et max

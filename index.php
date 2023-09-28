@@ -3,7 +3,7 @@
     $title = 'Lol trainer';
     
     $styles = ['setup', 'menu', 'settings', 'index'];
-    $scripts = ['board', 'menu', 'settings'];
+    $scripts = ['settings', 'board', 'menu'];
     
     include 'includes/head.php'; 
 ?>
