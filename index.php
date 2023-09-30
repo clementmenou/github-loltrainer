@@ -3,7 +3,7 @@
     $title = 'Lol trainer';
     
     $styles = ['setup', 'menu', 'settings', 'index'];
-    $scripts = ['settings', 'board', 'menu'];
+    $scripts = [];
     
     include 'includes/head.php'; 
 ?>
@@ -15,5 +15,7 @@
     ?>
 
     <div class="board"></div>
+
+    <script src="scripts/index.js"></script>
 </body>
 </html>
