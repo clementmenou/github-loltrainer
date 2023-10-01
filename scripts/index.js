@@ -29,7 +29,7 @@ class Settings {
 
     // Modify settings //
     static async getPlayerKeys() { // Get keys from .json as an array
-        if(!this.keys || this.keysModify){ // If keys are undefined or modified
+        if(!this.keys || this.keysModify) { // If keys are undefined or modified
             const rep = await fetch('players_datas/keys.json');
             const json = await rep.json();
             let keys = [];
@@ -150,8 +150,11 @@ class Index {
                 this.getRandomContent();
             }
         });
-        addEventListener("mousedown", (event) => {
-            
+        addEventListener("mousedown", (mouse) => {
+            if(mouse.button == 2 && this.target.matches(':hover') && this.target.targetKeyCode === "RightClick"){
+                this.getRandomCoord();
+                this.getRandomContent();
+            }
         });
     }
     
@@ -171,6 +174,9 @@ class Index {
 
 
 
+
+//       Options        //
+document.oncontextmenu = function() { return false };
 
 //      Interface       //
 Settings.openClose();
