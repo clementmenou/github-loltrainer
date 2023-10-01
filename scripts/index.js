@@ -1,48 +1,94 @@
 class Settings {
-    // Gestion ouverture fermeture des Settings
+    //        Parameters        //
+    // DOM //
     static menuSettings = document.querySelector('.menu-onglet-settings');
     static settingsZone = document.querySelector('.settings-zone');
-    // Fonction initialisation des settings
-    static initSettings(e){
+    static settingsKeys = document.querySelectorAll('.settings-keys');
+    
+    // Variales //
+    static keysModify;
+
+    //         Methods         //
+    // Open and Close settings window //
+    static openClose(){
         addEventListener("keydown", (event) => {
-            if (event.code == 'Escape'){
-                this.settingsClose();
-            }
+            if (event.code == 'Escape')
+                this.hide();
         });
-        Menu.zoneClose.addEventListener("click", () => { this.settingsClose() });
-        Menu.menuResume.addEventListener("click", () => { this.settingsClose() });
-        this.menuSettings.addEventListener("click", () => { this.settingsOpenClose() });
+        Menu.zoneClose.addEventListener("click", () => { this.hide() });
+        Menu.menuResume.addEventListener("click", () => { this.hide() });
+        this.menuSettings.addEventListener("click", () => { this.hideShow() });
     }
 
-    // Fonctions ouvrir fermer
-    static settingsOpenClose(){
+    static hideShow(){
         this.settingsZone.classList.toggle('show-flex');
-    }
-    
-    static settingsClose(){
+    }    
+    static hide(){
         this.settingsZone.classList.remove('show-flex');
+    }
+
+    // Modify settings //
+    static async getPlayerKeys() { // Get keys from .json as an array
+        if(!this.keys || this.keysModify){ // If keys are undefined or modified
+            const rep = await fetch('players_datas/keys.json');
+            const json = await rep.json();
+            let keys = [];
+            json.forEach(elem => {
+                keys.push(elem);
+                for(let i = 1; i < elem.probability; i++)
+                    keys.push({
+                        key: elem.key,
+                        input : elem.input
+                    });
+            });
+            this.keysModify = false;
+            this.keys = keys;
+        }
+    };
+
+    static async modifyPlayerKey(){
+        document.addEventListener("click", (elem) => {
+            if (elem.target.classList.contains('settings-keys')) {
+                elem.target.textContent = '';
+                
+            }
+        })
+        const rep = await fetch('players_datas/keys.json');
+    }
+
+    // Fill settings keys
+    static async fillPlayerKeys(){
+        await this.getPlayerKeys();
+        let i = 0;
+        this.settingsKeys.forEach(key => {
+            key.textContent = this.keys[i].key;
+            i += this.keys[i].probability;
+        })
     }
 };
 
+
 class Menu {
+    //        Parameters        //
     static menu = document.querySelector('.menu');
     static menuOpen = document.querySelector('.menu-button');
     static zoneClose = document.querySelector('.menu-close-zone');
     static menuResume = document.querySelector('.menu-onglet-resume');
 
-    static initMenu(e){
+    //         Methods         //
+    // Open and Close menu //
+    static openClose(){
         addEventListener("keydown", (event) => {
-            if (event.code == 'Escape'){
-                this.menuOpenClose();
-            }
+            if (event.code == 'Escape')
+                this.hideShow();
         });
         
-        this.zoneClose.addEventListener("click", () => { this.menuOpenClose() });
-        this.menuResume.addEventListener("click", () => { this.menuOpenClose() });
-        this.menuOpen.addEventListener("click", () => { this.menuOpenClose() });
+        this.zoneClose.addEventListener("click", () => { this.hideShow() });
+        this.menuResume.addEventListener("click", () => { this.hideShow() });
+        this.menuOpen.addEventListener("click", () => { this.hideShow() });
     }
 
-    static menuOpenClose(){
+    static hideShow(){
         this.menuOpen.classList.toggle('hide');
         this.menu.classList.toggle('show-flex');
         this.zoneClose.classList.toggle('show-flex');
@@ -50,61 +96,64 @@ class Menu {
 };
 
 class Index {
+    //        Parameters        //
     static board = document.querySelector('.board'); 
     static target = document.createElement('div');
-    static initBoard(e){
-        // Création de la cible
+
+    //         Methods         //
+    // Targets //
+    static createTargets(){ // Setting up the target
         this.board.appendChild(this.target);
         this.target.classList.add('target');
         this.getRandomCoord();
         this.getRandomContent();
-        // Quand la cible est touchée
+    }
+
+    static async getRandomContent(){ // Target content attribution
+        await Settings.getPlayerKeys();
+        let index = this.getRandomInt(Settings.keys.length);
+        this.target.textContent = Settings.keys[index].key;
+        this.target.targetKeyCode = Settings.keys[index].input;
+    }
+
+    static targetHit() { // When target is hit, her settings are reset
         addEventListener("keydown", (event) => {
             if(event.code == this.target.targetKeyCode && this.target.matches(':hover')){
                 this.getRandomCoord();
                 this.getRandomContent();
             }
         });
-        addEventListener("mousedown", () => {
-    
+        addEventListener("mousedown", (event) => {
+            
         });
     }
     
     // Attribution des coordonnées de la cible
-    static getRandomCoord(e){
+    static getRandomCoord(){
         let topInt = this.getRandomInt(80);
         let leftInt = this.getRandomInt(90);
         this.target.style.top = "calc(" + topInt + "% + 10%";
         this.target.style.left = "calc(" + leftInt + "% + 5%";
     }
-    
-    // Récupération des keys du player
-    static async getPlayerKeys() {
-        const rep = await fetch('players_datas/keys.json');
-        const json = await rep.json();
-        let keys = [];
-        json.forEach(elem => {
-            for(let i = 0; i < elem.probability; i++)
-                keys.push(elem);
-        });
-        return keys;
-    };
-    
-    // Attribution du contenu de la cible
-    static async getRandomContent(e){
-        let playerKeys = await this.getPlayerKeys();
-        let index = this.getRandomInt(playerKeys.length);
-        this.target.textContent = playerKeys[index].key;
-        this.target.targetKeyCode = playerKeys[index].input;
-    } 
-    
-    // Entier random entre 0 et max
+
+    // Random int between 0 and max
     static getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
 };
 
 
-Settings.initSettings();
-Menu.initMenu();
-Index.initBoard();
+
+
+//      Interface       //
+Settings.openClose();
+Menu.openClose();
+
+//        Keys          //
+Settings.getPlayerKeys();
+Settings.modifyPlayerKey();
+Settings.fillPlayerKeys();
+
+//        Board         //
+Index.createTargets();
+Index.targetHit();

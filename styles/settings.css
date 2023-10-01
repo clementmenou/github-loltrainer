@@ -29,6 +29,11 @@
     font-size: 3rem;
     text-align: center;
     line-height: 7rem;
+    user-select: none;
+}
+
+.settings-keys:hover{
+    border: 2px solid;
 }
 
 .settings-row {

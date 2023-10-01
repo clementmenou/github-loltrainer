@@ -9,7 +9,7 @@
 ?>
 <body>
     <?php 
-        include 'includes/menu.html'; // Menu burger déroulant 
+        include 'includes/menu.html'; // Dropdown burger menu
         include 'includes/settings.html'; // Settings
         include 'includes/credits.html'; // Credits
     ?>
