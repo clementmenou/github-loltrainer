@@ -10,7 +10,7 @@
 <body>
     <?php 
         include 'includes/menu.html'; // Dropdown burger menu
-        include 'includes/settings.php'; // Settings
+        include 'includes/settings.html'; // Settings
         include 'includes/credits.html'; // Credits
     ?>
 
