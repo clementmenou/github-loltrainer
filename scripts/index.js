@@ -127,6 +127,8 @@ class Index {
     static board = document.querySelector('.board'); 
     static target = document.createElement('div');
 
+    static hitSound = new Audio('sounds/hitSound.mp3');
+
     //         Methods         //
     // Targets //
     static createTargets(){ // Setting up the target
@@ -146,16 +148,22 @@ class Index {
     static targetHit() { // When target is hit, her settings are reset
         addEventListener("keydown", (event) => {
             if(event.code == this.target.targetKeyCode && this.target.matches(':hover')){
+                this.targetHitEffect();
                 this.getRandomCoord();
                 this.getRandomContent();
             }
         });
         addEventListener("mousedown", (mouse) => {
             if(mouse.button == 2 && this.target.matches(':hover') && this.target.targetKeyCode === "RightClick"){
+                this.targetHitEffect();
                 this.getRandomCoord();
                 this.getRandomContent();
             }
         });
+    }
+
+    static targetHitEffect(){
+        this.hitSound.play();
     }
     
     // Attribution des coordonnées de la cible
