@@ -46,38 +46,41 @@ class Settings {
         }
     };
 
-    static async modifyPlayerKey(){
+    static modifyPlayerKey(){
+        // Onclick the keyArea becomes empty and we save 
         document.addEventListener("click", (elem) => {
             if (elem.target.classList.contains('settings-keys')) {
                 elem.target.textContent = '';
                 this.keyModified = elem.target;
+                this.keysId = elem.target.id.substr(-1);
             }
         });
-        console.log(typeof(this.keyModified))
         addEventListener("keydown", (event) => {
             if(this.keyModified){
+                this.keyModified.textContent = event.key.toUpperCase();
                 this.keyDatas = event;
-                delete(this.keyModified);
-                console.log
                 this.sendPlayerKey();
+                delete(this.keyModified);
             }
         })
     }
 
     static async sendPlayerKey(){
-        this.keyDatas = {
-            key : this.keyDatas.key,
-            input : this.keyDatas.code,
-            probability : 20
+        let datas = {
+            keyDatas : { 
+                key : this.keyDatas.key.toUpperCase(),
+                input : this.keyDatas.code
+            },
+            keyId : this.keysId
         }
         
-        console.log(this.keyDatas)
-        let options = {
-            method : "PUT",
-            body : JSON.stringify(this.keyDatas)
-        }
-        await fetch('includes/settings.php', options)
-        .then(rep => console.log("GG!"));
+        await fetch('scripts/modifyKey.php', {
+            method : 'POST',
+            headers: {
+                'Content-Type': 'application/json' 
+            },
+            body : JSON.stringify(datas)
+        });
     }
 
     // Fill settings keys
