@@ -50,10 +50,34 @@ class Settings {
         document.addEventListener("click", (elem) => {
             if (elem.target.classList.contains('settings-keys')) {
                 elem.target.textContent = '';
-                
+                this.keyModified = elem.target;
+            }
+        });
+        console.log(typeof(this.keyModified))
+        addEventListener("keydown", (event) => {
+            if(this.keyModified){
+                this.keyDatas = event;
+                delete(this.keyModified);
+                console.log
+                this.sendPlayerKey();
             }
         })
-        const rep = await fetch('players_datas/keys.json');
+    }
+
+    static async sendPlayerKey(){
+        this.keyDatas = {
+            key : this.keyDatas.key,
+            input : this.keyDatas.code,
+            probability : 20
+        }
+        
+        console.log(this.keyDatas)
+        let options = {
+            method : "PUT",
+            body : JSON.stringify(this.keyDatas)
+        }
+        await fetch('includes/settings.php', options)
+        .then(rep => console.log("GG!"));
     }
 
     // Fill settings keys
