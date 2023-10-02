@@ -129,73 +129,85 @@ class Targets {
 
     static hitSound = new Audio('sounds/hitSound.mp3');
 
+    static targets = [];
+
     //         Methods         //
     // Targets //
     static create(nb){ // Setting up the target
         for(let i = 0; i < nb; i++){
             let target = document.createElement('div');
             this.board.appendChild(target);
-            target.classList.add(`target${i}`);
-            this.getRandomCoord();
-            this.getRandomContent();
+            target.classList.add('target');
+            target.id = `target${i}`;
+            this.targets.push(target.id);
+            this.getRandomCoord(target);
+            this.getRandomContent(target);
         }
     }
 
-    static async getRandomContent(){ // Target content attribution
-        await Settings.getPlayerKeys();
-        let index = this.getRandomInt(Settings.keys.length);
-        this.target.textContent = Settings.keys[index].key;
-        this.target.targetKeyCode = Settings.keys[index].input;
-    }
+    static hit() { // When target is hit, her settings are reset
+        function hitResponse(type, event){
+            Targets.targets.forEach((elem) => { // For each target
+                let target = document.getElementById(elem); // target = one of the targets generated
 
-    static targetHit() { // When target is hit, her settings are reset
+                let conditions = { 
+                    key : event.code == target.keyCode && target.matches(':hover'),
+                    mouse : event.button == 2 && target.matches(':hover') && target.keyCode === "RightClick"
+                };
+                
+                if(conditions[type]){ // If one of conditions above
+                    Targets.despawn(target);
+                    setTimeout(() => {
+                        Targets.getRandomCoord(target);
+                        Targets.getRandomContent(target);
+                        Targets.spawn(target);
+                    }, 200);
+                }
+            });
+        }
         addEventListener("keydown", (event) => {
+            if(event.repeat){ return }; // Avoid key to be held down
+
+            hitResponse("key", event);
             // Disable defaults behaviours of certains keys
             if (event.code === "Digit4" || event.code === "F3" /*|| event.code === "F5"*/) { 
                 event.preventDefault();
             }
-            if(event.code == this.target.targetKeyCode && this.target.matches(':hover')){
-                this.targetHitEffect(this.target);
-                setTimeout(() => {
-                    this.getRandomCoord();
-                    this.getRandomContent();
-                    this.targetSpawn(this.target);
-                }, 200)
-            }
         });
-        addEventListener("mousedown", (mouse) => {
-            if(mouse.button == 2 && this.target.matches(':hover') && this.target.targetKeyCode === "RightClick"){
-                this.targetHitEffect(this.target);
-                setTimeout(() => {
-                    this.getRandomCoord();
-                    this.getRandomContent();
-                    this.targetSpawn(this.target);
-                }, 200)
-            }
+        addEventListener("mousedown", (event) => { 
+            hitResponse("mouse", event) 
         });
     }
 
-    static targetHitEffect(target){
+    static despawn(target){
         this.hitSound.play();
-        target.classList.toggle('target-hit');
+        target.classList.add('target-hit');
         setTimeout(() => {
-            target.classList.toggle('target-hit');
+            target.classList.remove('target-hit');
         }, 200);
     }
 
-    static targetSpawn(target) {
-        target.classList.toggle('target-spawn');
+    static spawn(target) {
+        target.classList.add('target-spawn');
         setTimeout(() => {
-            target.classList.toggle('target-spawn');
+            target.classList.remove('target-spawn');
         }, 200);
+    }
+
+    // Target content attribution
+    static async getRandomContent(target){ 
+        await Settings.getPlayerKeys();
+        let index = this.getRandomInt(Settings.keys.length);
+        target.textContent = Settings.keys[index].key;
+        target.keyCode = Settings.keys[index].input;
     }
     
-    // Attribution des coordonnées de la cible
-    static getRandomCoord(){
+    // Target coord attribution
+    static getRandomCoord(target){
         let topInt = this.getRandomInt(80);
         let leftInt = this.getRandomInt(90);
-        this.target.style.top = "calc(" + topInt + "% + 10%";
-        this.target.style.left = "calc(" + leftInt + "% + 5%";
+        target.style.top = "calc(" + topInt + "% + 10%";
+        target.style.left = "calc(" + leftInt + "% + 5%";
     }
 
     // Random int between 0 and max
@@ -221,4 +233,4 @@ Settings.fillPlayerKeys();
 
 //        Board         //
 Targets.create(4);
-Targets.targetHit();
+Targets.hit();
