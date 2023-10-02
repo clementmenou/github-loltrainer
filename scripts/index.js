@@ -182,6 +182,7 @@ class Targets {
     static despawn(target){
         this.hitSound.play();
         target.classList.add('target-hit');
+        target.style.pointerEvents = "none"; // Avoid spam to destroy next target before target despawned
         setTimeout(() => {
             target.classList.remove('target-hit');
         }, 200);
@@ -191,6 +192,7 @@ class Targets {
         target.classList.add('target-spawn');
         setTimeout(() => {
             target.classList.remove('target-spawn');
+            target.style.pointerEvents = "auto";
         }, 200);
     }
 
