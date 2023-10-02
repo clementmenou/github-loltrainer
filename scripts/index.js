@@ -1,3 +1,26 @@
+class Credits {
+    static menuCredits = document.querySelector('.menu-onglet-credits');
+    static creditsZone = document.querySelector('.credits-zone');
+
+    static openClose(){
+        addEventListener("keydown", (event) => {
+            if (event.code == 'Escape')
+                this.hide();
+        });
+        Menu.zoneClose.addEventListener("click", () => { this.hide() });
+        Menu.menuResume.addEventListener("click", () => { this.hide() });
+        Settings.menuSettings.addEventListener("click", () => { this.hide() });
+        this.menuCredits.addEventListener("click", () => { this.hideShow() });
+    }
+
+    static hideShow(){
+        this.creditsZone.classList.toggle('show-flex');
+    }    
+    static hide(){
+        this.creditsZone.classList.remove('show-flex');
+    }
+}
+
 class Settings {
     //        Parameters        //
     // DOM //
@@ -17,6 +40,7 @@ class Settings {
         });
         Menu.zoneClose.addEventListener("click", () => { this.hide() });
         Menu.menuResume.addEventListener("click", () => { this.hide() });
+        Credits.menuCredits.addEventListener("click", () => {this.hide() });
         this.menuSettings.addEventListener("click", () => { this.hideShow() });
     }
 
@@ -225,6 +249,7 @@ class Targets {
 document.oncontextmenu = function() { return false };
 
 //      Interface       //
+Credits.openClose();
 Settings.openClose();
 Menu.openClose();
 

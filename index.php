@@ -2,7 +2,7 @@
     // Head HTML
     $title = 'Lol trainer';
     
-    $styles = ['setup', 'menu', 'settings', 'index'];
+    $styles = ['setup', 'menu', 'settings', 'credits', 'index'];
     $scripts = [];
     
     include 'includes/head.php'; 

@@ -1,0 +1,54 @@
+.credits-zone {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+
+    width: 60rem;
+    height: 40rem;
+
+    padding: 3rem;
+
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6rem;
+
+    border: solid .2rem black;
+    border-radius: .5rem;
+    background-color: var(--blue);
+}
+
+.credits-row {
+    display: flex;
+    gap: 6rem;
+}
+
+.credit-sub-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    color: white;
+}
+
+.credit-title{
+    font-size: 2.5rem;
+    font-weight: 600;    
+} 
+
+.credit-name {
+    font-size: 2rem;
+    font-weight: 300; 
+}
+
+.credit-name, .credit-title{
+    user-select: none;
+}
+
+.show-flex {
+    display: flex;
+}
+
