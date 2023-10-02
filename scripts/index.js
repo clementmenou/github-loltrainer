@@ -27,9 +27,12 @@ class Settings {
     static menuSettings = document.querySelector('.menu-onglet-settings');
     static settingsZone = document.querySelector('.settings-zone');
     static settingsKeys = document.querySelectorAll('.settings-keys');
+    static settingsCams = document.querySelectorAll('.settings-cam');
+    
     
     // Variales //
     static keysModify;
+    static camsModify;
 
     //         Methods         //
     // Open and Close settings window //
@@ -51,8 +54,8 @@ class Settings {
         this.settingsZone.classList.remove('show-flex');
     }
 
-    // Modify settings //
-    static async getPlayerKeys() { // Get keys from .json as an array
+    //        Keys        //
+    static async getKeys() { // Get keys from .json as an array
         if(!this.keys || this.keysModify) { // If keys are undefined or modified
             const rep = await fetch('players_datas/keys.json');
             const json = await rep.json();
@@ -70,7 +73,7 @@ class Settings {
         }
     };
 
-    static modifyPlayerKey(){
+    static modifyKey(){
         // Onclick the keyArea becomes empty and we save 
         document.addEventListener("click", (elem) => {
             if (elem.target.classList.contains('settings-keys')) {
@@ -83,13 +86,13 @@ class Settings {
             if(this.keyModified){
                 this.keyModified.textContent = event.key.toUpperCase();
                 this.keyDatas = event;
-                this.sendPlayerKey();
+                this.sendKey();
                 delete(this.keyModified);
             }
         })
     }
 
-    static async sendPlayerKey(){
+    static async sendKey(){
         let datas = {
             keyDatas : { 
                 key : this.keyDatas.key.toUpperCase(),
@@ -109,12 +112,74 @@ class Settings {
     }
 
     // Fill settings keys
-    static async fillPlayerKeys(){
-        await this.getPlayerKeys();
+    static async fillKeys(){
+        await this.getKeys();
         let i = 0;
         this.settingsKeys.forEach(key => {
             key.textContent = this.keys[i].key;
             i += this.keys[i].probability;
+        })
+    }
+
+    //      Cameras       //
+    static async getCams() { // Get cams from .json as an array
+        if(!this.cams || this.camsModify) { // If cams are undefined or modified
+            const rep = await fetch('players_datas/cam.json');
+            const json = await rep.json();
+            let cams = [];
+            json.forEach(elem => {
+                cams.push(elem);
+            });
+            this.camsModify = false;
+            this.cams = cams;
+        }
+    };
+
+    static modifyCam(){
+        // Onclick the camArea becomes empty and we save 
+        document.addEventListener("click", (elem) => {
+            if (elem.target.classList.contains('settings-cam')) {
+                elem.target.textContent = '';
+                this.camModified = elem.target;
+                this.camId = elem.target.id.substring(3);
+            }
+        });
+        addEventListener("keydown", (event) => {
+            if(this.camModified){
+                this.camModified.textContent = event.key.toUpperCase();
+                this.camDatas = event;
+                this.sendCam();
+                delete(this.camModified);
+            }
+        })
+    }
+
+    static async sendCam(){
+        let datas = {
+            camDatas : { 
+                key : this.camDatas.key.toUpperCase(),
+                input : this.camDatas.code
+            },
+            camId : this.camId
+        }
+        console.log(JSON.stringify(datas));
+        
+        await fetch('scripts/modifyCam.php', {
+            method : 'POST',
+            headers: {
+                'Content-Type': 'application/json' 
+            },
+            body : JSON.stringify(datas)
+        });
+        this.camsModify = true;
+    }
+
+    static async fillCams(){
+        await this.getCams();
+        let i = 0;
+        this.settingsCams.forEach(cam => {
+            cam.textContent = this.cams[i].key;
+            i++;
         })
     }
 };
@@ -221,7 +286,7 @@ class Targets {
 
     // Target content attribution
     static async getRandomContent(target){ 
-        await Settings.getPlayerKeys();
+        await Settings.getKeys();
         let index = this.getRandomInt(Settings.keys.length);
         target.textContent = Settings.keys[index].key;
         target.keyCode = Settings.keys[index].input;
@@ -253,9 +318,14 @@ Settings.openClose();
 Menu.openClose();
 
 //        Keys          //
-Settings.modifyPlayerKey();
-Settings.getPlayerKeys();
-Settings.fillPlayerKeys();
+Settings.modifyKey();
+Settings.getKeys();
+Settings.fillKeys();
+
+//        Cams          //
+Settings.modifyCam();
+Settings.getCams();
+Settings.fillCams();
 
 //        Board         //
 Targets.create(4);

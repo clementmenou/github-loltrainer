@@ -1,1 +1,1 @@
-[{"key":"O","input":"KeyO","probability":60},{"key":"&","input":"Digit1","probability":60},{"key":"\u00c9","input":"Digit2","probability":60},{"key":"\"","input":"Digit3","probability":60},{"key":"'","input":"Digit4","probability":60}]
+[{"key":"O","input":"KeyO"},{"key":"\u00c9","input":"Digit2"},{"key":"\"","input":"Digit3"},{"key":"'","input":"Digit4"},{"key":"(","input":"Digit5"}]
