@@ -31,14 +31,35 @@ body{
     top: 50%;
     left: 50%;
 
-    border: .3rem solid black;
     border-radius: 50%;
+    border: solid .3rem;
+    box-shadow: 0 0 3px 3px rgba(255, 255, 255, 0.2);
 
+    background-color: rgba(255, 255, 255, 0.18);
+
+    color: white;
     text-align: center;
     line-height: 3.4rem;
-    font-size: 3rem;
+    font-size: 2rem;
     font-family: 'Keysfont';
-    font-weight: 500;
+    font-weight: 600;
     cursor: default;
     user-select: none;
+}
+
+.target-hit {
+    scale: 0;
+    transition: .2s;
+}
+
+.target-spawn {
+    animation: targetSpawn .2s;
+}
+
+@keyframes targetSpawn {
+    from {
+        scale: 0;
+    } to {
+        scale: 1;
+    }
 }

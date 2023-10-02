@@ -52,7 +52,7 @@ class Settings {
             if (elem.target.classList.contains('settings-keys')) {
                 elem.target.textContent = '';
                 this.keyModified = elem.target;
-                this.keysId = elem.target.id.substr(-1);
+                this.keysId = elem.target.id.substring(3);
             }
         });
         addEventListener("keydown", (event) => {
@@ -81,6 +81,7 @@ class Settings {
             },
             body : JSON.stringify(datas)
         });
+        this.keysModify = true;
     }
 
     // Fill settings keys
@@ -122,20 +123,22 @@ class Menu {
     }
 };
 
-class Index {
+class Targets {
     //        Parameters        //
-    static board = document.querySelector('.board'); 
-    static target = document.createElement('div');
+    static board = document.querySelector('.board');
 
     static hitSound = new Audio('sounds/hitSound.mp3');
 
     //         Methods         //
     // Targets //
-    static createTargets(){ // Setting up the target
-        this.board.appendChild(this.target);
-        this.target.classList.add('target');
-        this.getRandomCoord();
-        this.getRandomContent();
+    static create(nb){ // Setting up the target
+        for(let i = 0; i < nb; i++){
+            let target = document.createElement('div');
+            this.board.appendChild(target);
+            target.classList.add(`target${i}`);
+            this.getRandomCoord();
+            this.getRandomContent();
+        }
     }
 
     static async getRandomContent(){ // Target content attribution
@@ -147,23 +150,44 @@ class Index {
 
     static targetHit() { // When target is hit, her settings are reset
         addEventListener("keydown", (event) => {
+            // Disable defaults behaviours of certains keys
+            if (event.code === "Digit4" || event.code === "F3" /*|| event.code === "F5"*/) { 
+                event.preventDefault();
+            }
             if(event.code == this.target.targetKeyCode && this.target.matches(':hover')){
-                this.targetHitEffect();
-                this.getRandomCoord();
-                this.getRandomContent();
+                this.targetHitEffect(this.target);
+                setTimeout(() => {
+                    this.getRandomCoord();
+                    this.getRandomContent();
+                    this.targetSpawn(this.target);
+                }, 200)
             }
         });
         addEventListener("mousedown", (mouse) => {
             if(mouse.button == 2 && this.target.matches(':hover') && this.target.targetKeyCode === "RightClick"){
-                this.targetHitEffect();
-                this.getRandomCoord();
-                this.getRandomContent();
+                this.targetHitEffect(this.target);
+                setTimeout(() => {
+                    this.getRandomCoord();
+                    this.getRandomContent();
+                    this.targetSpawn(this.target);
+                }, 200)
             }
         });
     }
 
-    static targetHitEffect(){
+    static targetHitEffect(target){
         this.hitSound.play();
+        target.classList.toggle('target-hit');
+        setTimeout(() => {
+            target.classList.toggle('target-hit');
+        }, 200);
+    }
+
+    static targetSpawn(target) {
+        target.classList.toggle('target-spawn');
+        setTimeout(() => {
+            target.classList.toggle('target-spawn');
+        }, 200);
     }
     
     // Attribution des coordonnées de la cible
@@ -191,10 +215,10 @@ Settings.openClose();
 Menu.openClose();
 
 //        Keys          //
-Settings.getPlayerKeys();
 Settings.modifyPlayerKey();
+Settings.getPlayerKeys();
 Settings.fillPlayerKeys();
 
 //        Board         //
-Index.createTargets();
-Index.targetHit();
+Targets.create(4);
+Targets.targetHit();

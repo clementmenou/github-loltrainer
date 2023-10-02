@@ -19,21 +19,21 @@
     background-color: var(--blue);
 }
 
-.settings-keys {
-    width: 7rem;
+.settings-keys, .settings-cam {
+    width: 6rem;
     height: 7rem;
     
-    border: 1px solid;
+    border: .2rem solid;
     color: white;
     font-family: 'Keysfont';
     font-size: 3rem;
     text-align: center;
-    line-height: 7rem;
+    line-height: 6.8rem;
     user-select: none;
 }
 
-.settings-keys:hover{
-    border: 2px solid;
+.settings-keys:hover, .settings-cam:hover {
+    box-shadow: inset 0 0 .5rem .5rem rgba(255, 255, 255, 0.2);
 }
 
 .settings-row {
@@ -43,8 +43,17 @@
 }
 
 .settings-sub-zone {
+    position: relative;
     display: flex;
     gap: 1rem;
+}
+
+.settings-sub-zone-title{
+    position: absolute;
+    top: -1.8rem;
+    left: 0;
+    color: white;
+    font-size: 1.2rem;
 }
 
 .show-flex {
