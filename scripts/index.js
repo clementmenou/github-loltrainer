@@ -135,7 +135,6 @@ class Menu {
                 this.hideShow();
         });
         
-        this.zoneClose.addEventListener("click", () => { this.hideShow() });
         this.menuResume.addEventListener("click", () => { this.hideShow() });
         this.menuOpen.addEventListener("click", () => { this.hideShow() });
     }

@@ -16,9 +16,9 @@
     align-items: center;
     gap: 6rem;
 
-    border: solid .2rem black;
     border-radius: .5rem;
     background-color: var(--blue);
+    box-shadow: 0 0 1rem 1rem rgba(255, 255, 255, 0.1);
 }
 
 .credits-row {
