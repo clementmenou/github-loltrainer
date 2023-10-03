@@ -4,6 +4,7 @@ class Credits {
 
     static openClose(){
         addEventListener("keydown", (event) => {
+            if(event.repeat){ return } // Anti keyhold
             if (event.code == 'Escape')
                 this.hide();
         });
@@ -29,7 +30,6 @@ class Settings {
     static settingsKeys = document.querySelectorAll('.settings-keys');
     static settingsCams = document.querySelectorAll('.settings-cam');
     
-    
     // Variales //
     static keysModify;
     static camsModify;
@@ -38,6 +38,7 @@ class Settings {
     // Open and Close settings window //
     static openClose(){
         addEventListener("keydown", (event) => {
+            if(event.repeat){ return } // Anti keyhold
             if (event.code == 'Escape')
                 this.hide();
         });
@@ -75,7 +76,9 @@ class Settings {
     static keysBehaviours(){
         addEventListener("keydown", (event) => {
             // Disable defaults behaviours like F3 activate research zone etc
+            // 
             // event.preventDefault();
+            // 
         }) 
     }
 
@@ -107,6 +110,7 @@ class Settings {
             }
         });
         addEventListener("keydown", (event) => {
+            if(event.repeat){ return } // Anti keyhold
             if(this.keyModified){
                 let keyValue = this.keySwitch(event);
                 this.keyModified.textContent = keyValue;
@@ -170,6 +174,7 @@ class Settings {
             }
         });
         addEventListener("keydown", (event) => {
+            if(event.repeat){ return } // Anti keyhold
             if(this.camModified){
                 let keyValue = this.keySwitch(event);
                 this.camModified.textContent = keyValue;
@@ -222,6 +227,7 @@ class Menu {
     // Open and Close menu //
     static openClose(){
         addEventListener("keydown", (event) => {
+            if(event.repeat){ return } // Anti keyhold
             if (event.code == 'Escape')
                 this.hideShow();
         });
@@ -279,9 +285,12 @@ class Targets {
                     }, 200);
                 }
             });
-            Score.shots++;
+            if(!Game.pause && event.code !== "Escape"){
+                Score.shots++;
+            }
             Score.stats();
         }
+
         addEventListener("keydown", (event) => {
             if(event.repeat){ return }; // Avoid key to be held down
             hitResponse("key", event);
@@ -353,6 +362,14 @@ class Score {
         return this.speedStat = Math.round((num + Number.EPSILON)*100)/100;
     }
 
+    static setSpeedTime(){
+        setInterval(() => {
+            if(!Game.pause) {
+                this.speedTime++;
+            }
+        }, 1000);
+    }
+
     static stats(){
         if(this.shots == 0){
             this.speedDiv.textContent = "NA/s";
@@ -364,12 +381,34 @@ class Score {
     }
 }
 
+class Game {
+    static pause = false;
+
+    static pausePlay(){
+        window.addEventListener("keydown", (event) => {
+            if(event.repeat){ return } // Anti keyhold
+
+            if(event.code == "Escape" && !this.pause) {
+                this.pause = true;
+            } else if(event.code == "Escape" && this.pause) {
+                this.pause = false;
+            }
+        });
+
+        Menu.menuResume.addEventListener("click", () => { this.pause = false; });
+        Menu.menuOpen.addEventListener("click", () => { this.pause = true; });
+    }
+}
+
 
 
 
 //       Options        //
 document.oncontextmenu = function() { return false };
 Settings.keysBehaviours();
+
+//         Game         //
+Game.pausePlay();
 
 //      Interface       //
 Credits.openClose();
@@ -387,7 +426,7 @@ Settings.getCams();
 Settings.fillCams();
 
 //        Score         //
-setInterval(() => {Score.speedTime++}, 1000);
+Score.setSpeedTime();
 Score.stats();
 
 //        Board         //
