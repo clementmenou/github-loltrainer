@@ -75,7 +75,7 @@ class Settings {
     static keysBehaviours(){
         addEventListener("keydown", (event) => {
             // Disable defaults behaviours like F3 activate research zone etc
-            event.preventDefault();
+            // event.preventDefault();
         }) 
     }
 
@@ -326,6 +326,11 @@ class Targets {
         return Math.floor(Math.random() * max);
     }
 };
+
+
+class Score {
+    
+}
 
 
 
