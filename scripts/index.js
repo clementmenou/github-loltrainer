@@ -271,6 +271,7 @@ class Targets {
                 
                 if(conditions[type]){ // If one of conditions above
                     Targets.despawn(target);
+                    Score.shotsHit++;
                     setTimeout(() => {
                         Targets.getRandomCoord(target);
                         Targets.getRandomContent(target);
@@ -278,6 +279,8 @@ class Targets {
                     }, 200);
                 }
             });
+            Score.shots++;
+            Score.stats();
         }
         addEventListener("keydown", (event) => {
             if(event.repeat){ return }; // Avoid key to be held down
@@ -329,7 +332,36 @@ class Targets {
 
 
 class Score {
-    
+    //      Parameters      //
+    static speedDiv = document.querySelector('.speed');
+    static precisionDiv = document.querySelector('.precision');
+
+    static shots = 0;
+    static shotsHit = 0;
+    static precisionStat = 0;
+    static speedStat = 0;
+    static speedTime = 0;
+
+    //      Methodes        //
+    static precision(){
+        let num = this.shotsHit/this.shots;
+        return this.precisionStat = Math.round((num + Number.EPSILON)*10000)/100;
+    }
+
+    static speed(){
+        let num = this.shotsHit/this.speedTime 
+        return this.speedStat = Math.round((num + Number.EPSILON)*100)/100;
+    }
+
+    static stats(){
+        if(this.shots == 0){
+            this.speedDiv.textContent = "NA/s";
+            this.precisionDiv.textContent = "NA/s";
+        } else {
+            this.speedDiv.textContent = this.speed() + "/s";
+            this.precisionDiv.textContent = this.precision() + "%";
+        }
+    }
 }
 
 
@@ -353,6 +385,10 @@ Settings.fillKeys();
 Settings.modifyCam();
 Settings.getCams();
 Settings.fillCams();
+
+//        Score         //
+setInterval(() => {Score.speedTime++}, 1000);
+Score.stats();
 
 //        Board         //
 Targets.create(4);
