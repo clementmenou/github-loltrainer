@@ -1,6 +1,6 @@
 <?php 
     $title = "Lol trainer";
-    $styles = ['setup.css', 'menu.css', 'settings.css', 'credits.css',  'index.css'];
+    $styles = ['setup', 'menu', 'settings', 'credits',  'index'];
 
     include 'includes/head.php';
 ?>
