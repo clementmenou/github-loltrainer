@@ -9,4 +9,6 @@
     <?php foreach($styles as $style): ?>
         <link rel="stylesheet" href="styles/<?= $style ?>.css">
     <?php endforeach;?>
+
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
 </head>
