@@ -55,6 +55,30 @@ class Settings {
     }
 
     //        Keys        //
+    static keySwitch(event){
+        switch(event.code) {
+            case "Digit1": return "1";
+            case "Digit2": return "2";
+            case "Digit3": return "3";
+            case "Digit4": return "4";
+            case "Digit5": return "5";
+            case "Digit6": return "6";
+            case "Digit7": return "7";
+            case "Digit8": return "8";
+            case "Digit9": return "9";
+            case "Digit0": return "0";
+            case "Space": return "\u2423";
+        }
+        return event.key.toUpperCase();
+    }
+
+    static keysBehaviours(){
+        addEventListener("keydown", (event) => {
+            // Disable defaults behaviours like F3 activate research zone etc
+            event.preventDefault();
+        }) 
+    }
+
     static async getKeys() { // Get keys from .json as an array
         if(!this.keys || this.keysModify) { // If keys are undefined or modified
             const rep = await fetch('players_datas/keys.json');
@@ -84,8 +108,12 @@ class Settings {
         });
         addEventListener("keydown", (event) => {
             if(this.keyModified){
-                this.keyModified.textContent = event.key.toUpperCase();
-                this.keyDatas = event;
+                let keyValue = this.keySwitch(event);
+                this.keyModified.textContent = keyValue;
+                this.keyDatas = {
+                    key : keyValue,
+                    input : event.code
+                }
                 this.sendKey();
                 delete(this.keyModified);
             }
@@ -94,10 +122,7 @@ class Settings {
 
     static async sendKey(){
         let datas = {
-            keyDatas : { 
-                key : this.keyDatas.key.toUpperCase(),
-                input : this.keyDatas.code
-            },
+            keyDatas : this.keyDatas,
             keyId : this.keysId
         }
         
@@ -146,8 +171,12 @@ class Settings {
         });
         addEventListener("keydown", (event) => {
             if(this.camModified){
-                this.camModified.textContent = event.key.toUpperCase();
-                this.camDatas = event;
+                let keyValue = this.keySwitch(event);
+                this.camModified.textContent = keyValue;
+                this.camDatas = {
+                    key : keyValue,
+                    input : event.code
+                };
                 this.sendCam();
                 delete(this.camModified);
             }
@@ -156,10 +185,7 @@ class Settings {
 
     static async sendCam(){
         let datas = {
-            camDatas : { 
-                key : this.camDatas.key.toUpperCase(),
-                input : this.camDatas.code
-            },
+            camDatas : this.camDatas,
             camId : this.camId
         }
         console.log(JSON.stringify(datas));
@@ -255,12 +281,7 @@ class Targets {
         }
         addEventListener("keydown", (event) => {
             if(event.repeat){ return }; // Avoid key to be held down
-
             hitResponse("key", event);
-            // Disable defaults behaviours of certains keys
-            if (event.code === "Digit4" || event.code === "F3" /*|| event.code === "F5"*/) { 
-                event.preventDefault();
-            }
         });
         addEventListener("mousedown", (event) => { 
             hitResponse("mouse", event) 
@@ -311,6 +332,7 @@ class Targets {
 
 //       Options        //
 document.oncontextmenu = function() { return false };
+Settings.keysBehaviours();
 
 //      Interface       //
 Credits.openClose();
